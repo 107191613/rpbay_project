@@ -1,0 +1,7 @@
+$("#container").hide();
+$("#store").show();
+
+$("#store").html("<%=@store.id%>商店<br>");
+<%@products.each do |p|%>
+$("#store").append("<%=p.id%><%=p.name%><br>");
+<%end%>

@@ -1,0 +1,43 @@
+
+<%@bdareas.each do |a|%>
+<%=a.address%><%=link_to "添加商店",stores_path(:bdarea_id=>a.id,:bdarea_address=>a.address,:bdpoint=>a.bdpoint)%> 删除地址
+<%end%>
+  <div id="container" style="height:400px;width:590px; "></div>
+<%= form_tag bd_lookup_path,:method=>"get" ,:remote=>true,:format=>:js do%>
+    城市：<%=text_field_tag :bd_city,"", :value=>"成都"%> <br>
+    小区名：<%=text_field_tag :bd_area,""%>
+    <%= submit_tag "查询"%>
+<%end%>
+
+<%= form_tag bdarea_create_path,:method=>"post" ,:remote=>true,:format=>:js do%>
+    <%=hidden_field_tag :bd_name,"没有创建！",:id=>"bd_name"%>
+    <%=hidden_field_tag :points,"没有创建！",:id=>"points"%>
+    <%= submit_tag "创建位置"%>
+<%end%>
+
+    <script>
+var map = new BMap.Map("container");
+var point = new BMap.Point(104.072296, 30.663085);
+map.centerAndZoom(point, 13);
+map.addControl(new BMap.NavigationControl());
+map.enableScrollWheelZoom(true);
+/////////地图当前位置红点拖动start
+var icon = new BMap.Icon('/bdmap/redpoint.png',
+        new BMap.Size(20, 32), {anchor: new BMap.Size(10, 30)});
+var marker = new BMap.Marker(point, {icon: icon});  // 百度红点图标图片定义
+marker.setTitle("拖到小区位置");
+marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+marker.enableDragging();
+
+marker.addEventListener("dragend", function(e){
+    // alert("当前位置：" + e.point.lng + ", " + e.point.lat);
+    $.ajax({
+        type: "POST",
+        url:"<%= bd_lookup_axis_path%>",
+        data:{bdlng:e.point.lng,bdlat:e.point.lat,mapsize:map.getZoom()},
+        dataType: "script",
+        success: function(res){}});
+})
+map.addOverlay(marker);
+//////////地图当前位置红点拖动end
+    </script>

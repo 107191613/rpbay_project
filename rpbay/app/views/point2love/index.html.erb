@@ -1,0 +1,32 @@
+
+  <style>
+      .img05 {
+          opacity: .05;  Standard: FF gt 1.5, Opera, Safari
+          filter: alpha(opacity=5);  IE lt 8
+          -ms-filter: "alpha(opacity=75)";  IE 8
+          -khtml-opacity: .05;  Safari 1.x
+          -moz-opacity: .05;  FF lt 1.5, Netscape
+      }
+  </style>
+
+  <div style="width: 800px;height: 600px;margin-left: auto;margin-right: auto">
+    <center>
+      <image  style="width: 60px;height: 50px" src="assets/rails.png" class="img05"></image>    <br>
+
+      <%= form_tag look_up_path,:method=>"get" ,:remote=>true,:format=>:js do%>
+          <%=text_field_tag :bd_name,"",:style=>"width: 280px;height: 20px"%>
+          <%= submit_tag "查询"%>
+      <%end%>
+    </center>
+    <br>
+    <!--background-image: url(assets/rails.png);background-repeat: no-repeat;-->
+      <div id="left_bar"  style="width: 200px;height: 400px;float:
+              left;margin-right: 10px;background-color: #eeeeee;'">
+      </div>
+
+      <image id="adimage" style="height:400px;width:590px;float:left;" src="assets/rails.png" class="img05"></image>
+      <div id="container" style="height:400px;width:590px; float:left;display:none"></div>
+      <div id="store" style="height:400px;width:590px;background-color: #eeeeee;float:left;display:none;"></div>
+  </div>
+
+

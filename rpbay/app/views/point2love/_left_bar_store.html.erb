@@ -1,0 +1,7 @@
+
+<%if !@bdarea.blank?%>
+    <%@bdarea.stores.each do|a|%>
+        <%=link_to a.name,get_store_path(:store_id=>a.id),:remote=>true,:format=>"js"%> <br>
+    <%end%>
+<%end%>
+

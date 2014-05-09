@@ -1,0 +1,11 @@
+<center style="font-size: 18px">产品页面</center><br>
+<center><%=params[:store_id]%>所在产品名称：<%=params[:name]%></center><br>
+<%@products.each do |a|%>
+    <%=a.name%> 删除产品
+<%end%>
+
+<%= form_tag add_product_path,:method=>"post" ,:remote=>true,:format=>:js do%>
+    <%=hidden_field_tag :store_id,"",:value=>params[:store_id]%>
+    产品名称:<%=text_field_tag :name%>
+    <%= submit_tag "创建产品"%>
+<%end%>

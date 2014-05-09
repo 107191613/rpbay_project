@@ -1,0 +1,61 @@
+<center style="font-size: 18px">商店页面</center><br>
+<center><%=params[:bdarea_id]%>所在地址名称：<%=params[:bdarea_address]%> </center><br>
+<%@stores.each do |a|%>
+    <%=a.name%><%=link_to "添加产品",products_path(:store_id=>a.id,:name=>a.name)%> 删除产品
+<%end%>
+
+<div id="container" style="height:400px;width:590px;"></div> <br>
+
+<div id="add_store" style="display: none">
+<%= form_tag add_store_path,:method=>"post" ,:remote=>true,:format=>:js do%>
+    <%=hidden_field_tag :bdarea_id,"",:value=>params[:bdarea_id]%>
+      坐标：<%=text_field_tag :points,"",:id=>"store_points"%>
+    商店名称:<%=text_field_tag :name%>
+    <%= submit_tag "创建商店"%>
+<%end%>
+</div>
+<script>
+var map = new BMap.Map("container",{enableMapClick:false});
+var point = new BMap.Point(<%=params[:bdpoint]%>);
+map.centerAndZoom(point, 15);
+map.addControl(new BMap.NavigationControl());
+map.enableScrollWheelZoom(true);
+
+/////////地图当前位置红点拖动start
+display_bdarea();
+display_stores();
+map.addEventListener("click", function(e){
+    display_bdarea();
+    display_stores();
+    display_new_store(e.point)
+    $("#add_store").show();
+    $("#store_points").val(e.point.lng+","+ e.point.lat);
+
+})
+function display_new_store(p){
+    var icon = new BMap.Icon('/bdmap/redpoint.png',
+            new BMap.Size(20, 32), {anchor: new BMap.Size(10, 30)});
+    var marker = new BMap.Marker(p, {icon: icon});  // 百度红点图标图片定义
+    map.addOverlay(marker);
+
+}
+function display_bdarea(){
+    var icon = new BMap.Icon('/bdmap/redpoint.png',
+            new BMap.Size(20, 32), {anchor: new BMap.Size(10, 30)});
+    var marker = new BMap.Marker(point, {icon: icon});  // 百度红点图标图片定义
+    var label = new BMap.Label("<%=params[:bdarea_address]%>",{"offset":new BMap.Size(-15,29)});
+    marker.setLabel(label);
+    map.addOverlay(marker);
+}
+function display_stores(){
+    <%@stores.each do |a|%>
+    var point1 = new BMap.Point(<%=a.points%>);
+    var icon = new BMap.Icon('/bdmap/redpoint.png',
+            new BMap.Size(20, 32), {anchor: new BMap.Size(10, 30)});
+    var marker = new BMap.Marker(point1, {icon: icon});  // 百度红点图标图片定义
+    var label = new BMap.Label("<%=a.name%>",{"offset":new BMap.Size(-15,29)});
+    marker.setLabel(label);
+    map.addOverlay(marker);
+    <%end%>
+}
+</script>
